@@ -1,0 +1,8 @@
+{
+    "postgres": {
+        "db_host": "postgres",
+        "db_database": "archivist",
+        "db_user": "archivist",
+        "db_password": "********"
+    }
+}

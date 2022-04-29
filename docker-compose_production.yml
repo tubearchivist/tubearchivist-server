@@ -1,0 +1,56 @@
+version: '3.3'
+
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./volume/nginx-proxy/certs:/etc/nginx/certs
+      - ./volume/nginx-proxy/vhost:/etc/nginx/vhost.d
+      - ./volume/nginx-proxy/html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  nginx-proxy-acme:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    volumes:
+      - ./volume/nginx-proxy/certs:/etc/nginx/certs
+      - ./volume/nginx-proxy/vhost:/etc/nginx/vhost.d
+      - ./volume/nginx-proxy/html:/usr/share/nginx/html
+      - ./volume/nginx-proxy/acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+  nginx:
+    build: ./tubearchivist/nginx
+    container_name: backend_nginx
+    restart: always
+    expose:
+      - "8000"
+    depends_on:
+      - tubearchivist
+    environment:
+      - VIRTUAL_HOST=tubearchivist.com,www.tubearchivist.com
+      - LETSENCRYPT_HOST=tubearchivist.com,www.tubearchivist.com
+  # main flask site
+  tubearchivist:
+    container_name: tubearchivist
+    build: ./tubearchivist/web
+    restart: always
+    env_file:
+      - ./env/tubearchivist.env
+    expose:
+      - "8080"
+  # backend postgres
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    restart: always
+    volumes:
+      - ./volume/postgres:/var/lib/postgresql/data/
+    env_file:
+      - ./env/postgres.env
+    expose:
+      - "5432"

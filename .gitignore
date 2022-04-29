@@ -1,0 +1,12 @@
+# personal
+.vscode/
+
+# secrets
+config.json
+postgres.env
+tubearchivist.env
+
+# example hooks
+docker-hook.json
+github-hook.json
+roadmap-hook.json

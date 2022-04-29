@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tube Archivist</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <meta property="og:title" content="TubeArchivist" />
+    <meta property="og:description" content="Your self hosted YouTube media server" />
+    <meta property="og:image" content="/static/img/banner-tube-archivist-dark.png" />
+    <script type="text/javascript" src="/static/script.js"></script>
+</head>
+<body>
+    <div class="content">
+        <div class="banner">
+            <img src="/static/img/banner-tube-archivist-dark.png" alt="banner">
+        </div>
+        <div class="tag-line">
+            <h1>Your self hosted YouTube media server</h1>
+        </div>
+        <div class="social-links">
+            <div class="social-item">
+                <a href="https://github.com/tubearchivist/tubearchivist" target="_blank">
+                    <img src="/static/img/logo-github.png" alt="docker-logo">
+                </a>
+            </div>
+            <div class="social-item">
+                <a href="https://www.reddit.com/r/TubeArchivist/" target="_blank">
+                    <img src="/static/img/logo-reddit.png" alt="reddit-logo">
+                </a>
+            </div>
+            <div class="social-item">
+                <a href="https://discord.gg/AFwz8nE7BK" target="_blank">
+                    <img src="/static/img/logo-discord.png" alt="discord-logo">
+                </a>
+            </div>
+            <div class="social-item">
+                <a href="https://hub.docker.com/r/bbilly1/tubearchivist" target="_blank">
+                    <img src="/static/img/logo-docker.png" alt="docker-logo">
+                </a>
+            </div>
+            <div class="social-item">
+                <a href="https://git.oikeo-projects.com/simon/tubearchivist" target="_blank">
+                    <img src="/static/img/logo-git.png" alt="docker-logo">
+                </a>
+            </div>
+        </div>
+        <div class="youtube" data-embed="O8H8Z01c0Ys"> 
+            <div class="play-button"> 
+                <img src="/static/img/icon-play.svg" alt="play">
+            </div>
+        </div>
+        <div class="block-2">
+            <div>
+                <h2>Core functionality</h2>
+                <ul>
+                    <li>Subscribe to your favorite YouTube channels</li>
+                    <li>Download Videos</li>
+                    <li>Index and make videos searchable</li>
+                    <li>Play videos</li>
+                    <li>Keep track of viewed and unviewed videos</li>
+                </ul>
+            </div>
+            <div>
+                <h2>Problem Description</h2>
+                <p>Once your YouTube video collection grows, it becomes hard to search and find a specific video. That's where Tube Archivist comes in: By indexing your video collection with metadata from YouTube, you can organize, search and enjoy your archived YouTube videos without hassle offline through a convenient web interface.
+                </p>
+            </div>
+        </div>
+        <div>
+            <h2>Latest Release:</h2>
+            {% if latest.breaking_changes %}
+            <div class="alert">
+                <span>Requires your attention!</span>
+            </div>
+            {% endif %}
+            <p>Release tag: {{ latest.release_version }}</p>
+            <p>Release date: {{ latest.time_stamp_human }}</p>
+            <div class="release-notes">
+                {{ latest_notes|safe }}
+            </div>
+        </div>
+    </div>
+    <div class="footer-colors">
+        <div class="col-1"></div>
+        <div class="col-2"></div>
+        <div class="col-3"></div>
+    </div>
+</body>
+</html>

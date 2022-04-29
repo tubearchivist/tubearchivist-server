@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  nginx:
+    build: ./tubearchivist/nginx
+    container_name: backend_nginx
+    restart: always
+    ports: 
+      - "80:80"
+    depends_on:
+      - tubearchivist
+  # main flask site
+  tubearchivist:
+    container_name: tubearchivist
+    build: ./tubearchivist/web
+    restart: always
+    env_file:
+      - ./env/tubearchivist.env
+    expose:
+      - "8080"
+  # backend postgres
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    restart: always
+    volumes:
+      - ./volume/postgres:/var/lib/postgresql/data/
+    env_file:
+      - ./env/postgres.env
+    expose:
+      - "5432"
