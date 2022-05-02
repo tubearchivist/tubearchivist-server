@@ -5,6 +5,7 @@
 config.json
 postgres.env
 tubearchivist.env
+umami.env
 
 # example hooks
 docker-hook.json
