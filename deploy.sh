@@ -2,12 +2,11 @@
 # deploy the tube archivist website
 
 test_host="tubearchivist-website.local"
-public_host="www.tubearchivist.com"
+public_host="tubearchivist.com"
 
 function rebuild_test {
     echo "rebuild testing environment"
     rsync -a --progress --delete docker-compose_testing.yml $test_host:docker/docker-compose.yml
-    rsync -a --progress --delete docker-compose.yml $test_host:docker
     rsync -a --progress --delete tubearchivist $test_host:docker
     rsync -a --progress --delete env $test_host:docker
     
