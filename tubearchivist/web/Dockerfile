@@ -6,7 +6,8 @@ RUN apt-get clean && apt-get -y update && \
     vim htop bmon net-tools iputils-ping procps
 
 COPY requirements.txt /requirements.txt
-RUN pip install --no-cache-dir -r /requirements.txt --src /usr/local/src
+RUN pip install --upgrade pip setuptools && \
+    pip install --no-cache-dir -r /requirements.txt --src /usr/local/src
 
 COPY . /srv/flask_app
 WORKDIR /srv/flask_app
