@@ -1,5 +1,5 @@
 flask==2.1.2
-ipython==8.2.0
+ipython==8.3.0
 markdown==3.3.6
 psycopg2==2.9.3
 requests==2.27.1
