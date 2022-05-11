@@ -12,6 +12,11 @@ services:
       - ./volume/nginx-proxy/vhost:/etc/nginx/vhost.d
       - ./volume/nginx-proxy/html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - front
+      - tubearchivist_network
+      - umami_network
+      - drone_network
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
@@ -23,6 +28,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - NGINX_PROXY_CONTAINER=nginx-proxy
+    networks:
+      - front
+  # main flask site
   nginx:
     build: ./tubearchivist/nginx
     container_name: backend_nginx
@@ -34,7 +42,8 @@ services:
     environment:
       - VIRTUAL_HOST=tubearchivist.com,www.tubearchivist.com
       - LETSENCRYPT_HOST=tubearchivist.com,www.tubearchivist.com
-  # main flask site
+    networks:
+      - tubearchivist_network
   tubearchivist:
     container_name: tubearchivist
     build: ./tubearchivist/web
@@ -43,6 +52,8 @@ services:
       - ./env/tubearchivist.env
     expose:
       - "8080"
+    networks:
+      - tubearchivist_network
   # backend postgres
   postgres:
     image: postgres:14
@@ -54,6 +65,8 @@ services:
       - ./env/postgres.env
     expose:
       - "5432"
+    networks:
+      - tubearchivist_network
   # umami stats
   umami:
     image: ghcr.io/mikecao/umami:postgresql-latest
@@ -68,6 +81,8 @@ services:
     depends_on:
       - umami-db
     restart: always
+    networks:
+      - umami_network
   umami-db:
     image: postgres:14
     container_name: umami-db
@@ -77,3 +92,43 @@ services:
       - ./volume/umami/schema.postgresql.sql:/docker-entrypoint-initdb.d/schema.postgresql.sql:ro
       - ./volume/umami/db:/var/lib/postgresql/data
     restart: always
+    networks:
+      - umami_network
+  # drone build server
+  drone:
+    image: drone/drone:2
+    container_name: drone
+    expose:
+      - "80"
+    env_file:
+      - ./env/drone.env
+    environment:
+      - VIRTUAL_HOST=www.drone.tubearchivist.com,drone.tubearchivist.com
+      - LETSENCRYPT_HOST=www.drone.tubearchivist.com,drone.tubearchivist.com
+    volumes:
+      - ./volume/drone/server:/data
+    restart: always
+    networks:
+      - drone_network
+  drone-runner:
+    image: drone/drone-runner-docker
+    container_name: drone-runner
+    expose:
+      - "3000"
+    env_file:
+      - ./env/drone.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    networks:
+      - drone_network
+
+networks:
+  front:
+    driver: bridge
+  tubearchivist_network:
+    driver: bridge
+  umami_network:
+    driver: bridge
+  drone_network:
+    driver: bridge
