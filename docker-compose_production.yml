@@ -110,11 +110,23 @@ services:
     restart: always
     networks:
       - drone_network
-  drone-runner:
-    image: drone/drone-runner-docker
-    container_name: drone-runner
+  drone-runner-amd64:
+    image: drone/drone-runner-docker:1.8.1-linux-amd64
+    container_name: drone-runner-amd64
     expose:
       - "3000"
+    env_file:
+      - ./env/drone.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    networks:
+      - drone_network
+  drone-runner-arm64:
+    image: drone/drone-runner-docker:1.8.1-linux-arm64
+    container_name: drone-runner-arm64
+    expose:
+      - "3001"
     env_file:
       - ./env/drone.env
     volumes:
