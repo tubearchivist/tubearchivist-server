@@ -101,6 +101,7 @@ class GithubHook(WebhookBase):
         tag_name = self.hook["release"]["tag_name"]
         task = TaskHandler(self.repo_conf, tag_name=tag_name)
         task.create_task("build_release")
+        GithubBackup(tag_name).save_tag()
 
 
 class GithubBackup:
