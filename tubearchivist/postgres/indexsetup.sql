@@ -22,3 +22,13 @@ CREATE TABLE ta_release (
     breaking_changes BOOLEAN NOT NULL,
     release_notes TEXT NOT NULL 
 );
+
+-- create roadmap history table
+CREATE TABLE ta_roadmap (
+    id SERIAL NOT NULL PRIMARY KEY,
+    time_stamp INT NOT NULL,
+    time_stamp_human VARCHAR(20) NOT NULL,
+    last_id VARCHAR(20) NOT NULL,
+    implemented TEXT NOT NULL,
+    pending TEXT NOT NULL
+);

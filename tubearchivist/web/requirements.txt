@@ -2,5 +2,6 @@ flask==2.1.2
 ipython==8.3.0
 markdown==3.3.7
 psycopg2==2.9.3
+redis==4.3.1
 requests==2.27.1
 uWSGI==2.0.20

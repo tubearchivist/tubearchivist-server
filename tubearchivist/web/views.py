@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, jsonify, request
 from src.webhook_docker import DockerHook
-from src.webhook_github import GithubBackup
+from src.webhook_github import GithubBackup, GithubHook
 import markdown
 
 app = Flask(__name__)
@@ -28,20 +28,16 @@ def release(release_id):
 @app.route("/api/webhook/docker/", methods=['POST'])
 def webhook_docker():
     """parse docker webhook data"""
+    handler = DockerHook(request)
+    valid = handler.validate()
+
+    print(f"valid: {valid}")
+    if not valid:
+        return "Forbidden", 403
+
     print(request.json)
-    hook = DockerHook(request.json)
-    if hook.docker_hook_details.get("release_tag") != "unstable":
-        message = {"success": False}
-        print(message, "not unstable build")
-        return jsonify(message)
+    message = handler.process()
 
-    hook.get_latest_commit()
-    if not hook.first_line_message.endswith("#build"):
-        message = {"success": False}
-        print(message, "not build message in commit")
-        return jsonify(message)
-
-    message = hook.forward_message()
     print(message, "hook sent to discord")
     return jsonify(message)
 
@@ -49,6 +45,13 @@ def webhook_docker():
 @app.route("/api/webhook/github/", methods=['POST'])
 def webhook_github():
     """prase webhooks from github"""
+    handler = GithubHook(request)
+    valid = handler.validate()
+    print(f"valid: {valid}")
+    if not valid:
+        return "Forbidden", 403
+
     print(request.json)
-    message = {"success": False}
+    handler.create_hook_task()
+    message = {"success": True}
     return jsonify(message)

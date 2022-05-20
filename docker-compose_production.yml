@@ -16,7 +16,6 @@ services:
       - front
       - tubearchivist_network
       - umami_network
-      - drone_network
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
@@ -67,6 +66,16 @@ services:
       - "5432"
     networks:
       - tubearchivist_network
+  redis:
+    image: redislabs/rejson:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ./volume/redis:/data
+    networks:
+      - tubearchivist_network
   # umami stats
   umami:
     image: ghcr.io/mikecao/umami:postgresql-latest
@@ -94,46 +103,6 @@ services:
     restart: always
     networks:
       - umami_network
-  # drone build server
-  drone:
-    image: drone/drone:2
-    container_name: drone
-    expose:
-      - "80"
-    env_file:
-      - ./env/drone.env
-    environment:
-      - VIRTUAL_HOST=www.drone.tubearchivist.com,drone.tubearchivist.com
-      - LETSENCRYPT_HOST=www.drone.tubearchivist.com,drone.tubearchivist.com
-    volumes:
-      - ./volume/drone/server:/data
-    restart: always
-    networks:
-      - drone_network
-  drone-runner-amd64:
-    image: drone/drone-runner-docker:1.8.1-linux-amd64
-    container_name: drone-runner-amd64
-    expose:
-      - "3000"
-    env_file:
-      - ./env/drone.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
-    networks:
-      - drone_network
-  drone-runner-arm64:
-    image: drone/drone-runner-docker:1.8.1-linux-arm64
-    container_name: drone-runner-arm64
-    expose:
-      - "3001"
-    env_file:
-      - ./env/drone.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
-    networks:
-      - drone_network
 
 networks:
   front:
@@ -141,6 +110,4 @@ networks:
   tubearchivist_network:
     driver: bridge
   umami_network:
-    driver: bridge
-  drone_network:
     driver: bridge

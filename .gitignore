@@ -6,9 +6,9 @@ config.json
 postgres.env
 tubearchivist.env
 umami.env
-drone.env
 
 # example hooks
 docker-hook.json
 github-hook.json
+github-push-hook.json
 roadmap-hook.json
