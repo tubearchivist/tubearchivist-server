@@ -103,6 +103,13 @@ class GithubHook(WebhookBase):
         task.create_task("build_release")
         GithubBackup(tag_name).save_tag()
 
+    def save_hook(self):
+        """save hook to disk for easy debugging"""
+        now = datetime.now().strftime("%s")
+        filename = f"/data/hooks/github_hook-{now}.json"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(json.dumps(self.hook))
+
 
 class GithubBackup:
     """backup release and notes"""

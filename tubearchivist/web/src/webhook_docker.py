@@ -1,7 +1,9 @@
 """parse and forward docker webhooks"""
 
-import requests
+import json
+from datetime import datetime
 
+import requests
 from src.webhook_base import WebhookBase
 
 
@@ -117,3 +119,10 @@ class DockerHook(WebhookBase):
         response = self._forward_message(message_data, url)
 
         return response
+
+    def save_hook(self):
+        """save hook to disk for easy debugging"""
+        now = datetime.now().strftime("%s")
+        filename = f"/data/hooks/docker_hook-{now}.json"
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(json.dumps(self.hook))

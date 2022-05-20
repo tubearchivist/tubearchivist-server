@@ -37,6 +37,7 @@ def webhook_docker():
 
     print(request.json)
     message = handler.process()
+    handler.save_hook()
 
     print(message, "hook sent to discord")
     return jsonify(message)
@@ -53,5 +54,6 @@ def webhook_github():
 
     print(request.json)
     handler.create_hook_task()
+    handler.save_hook()
     message = {"success": True}
     return jsonify(message)
