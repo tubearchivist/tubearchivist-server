@@ -82,7 +82,8 @@ class GithubHook(WebhookBase):
     def check_commit_message(self):
         """check if keyword in commit message is there"""
         message = self.hook["head_commit"]["message"]
-        return message.endswith(self.repo_conf["unstable_keyword"])
+        first_line = message.split("\n")[0]
+        return first_line.endswith(self.repo_conf["unstable_keyword"])
 
     def _check_roadmap(self):
         """check if roadmap update needed"""
