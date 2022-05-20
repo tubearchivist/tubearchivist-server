@@ -8,24 +8,24 @@ class WebhookBase:
 
     # map key is gh_repo name
     HOOK_MAP = {
-        "drone-test": {
+        "tubearchivist": {
             "gh_user": "tubearchivist",
-            "gh_repo": "drone-test",
+            "gh_repo": "tubearchivist",
             "docker_user": "bbilly1",
-            "docker_repo": "drone-test",
+            "docker_repo": "tubearchivist",
             "unstable_keyword": "#build",
             "build_unstable": [
-                "build", "--platform", "linux/amd64,linux/arm64",
-                "-t", "bbilly1/drone-test:unstable", "--push"
+                "build", "--platform", "linux/amd64",
+                "-t", "bbilly1/tubearchivist:unstable", "--push"
             ],
             "build_release": [
                 "build", "--platform", "linux/amd64,linux/arm64",
-                "-t", "bbilly1/drone-test",
-                "-t", "bbilly1/drone-test:unstable",
-                "-t", "bbilly1/drone-test:$VERSION", "--push"
+                "-t", "bbilly1/tubearchivist",
+                "-t", "bbilly1/tubearchivist:unstable",
+                "-t", "bbilly1/tubearchivist:$VERSION", "--push"
             ],
-            "discord_unstable_hook": environ.get("NOTIFICATION_TEST_HOOK_URL"),
-            "discord_release_hook": environ.get("NOTIFICATION_TEST_HOOK_URL"),
+            "discord_unstable_hook": environ.get("DOCKER_UNSTABLE_HOOK_URL"),
+            "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
         }
     }
     ROADMAP_HOOK_URL = environ.get("ROADMAP_HOOK_URL")
