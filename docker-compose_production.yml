@@ -116,7 +116,6 @@ services:
     environment:
       - VIRTUAL_HOST=git.tubearchivist.com,www.git.tubearchivist.com
       - LETSENCRYPT_HOST=git.tubearchivist.com,www.git.tubearchivist.com
-      - VIRTUAL_PORT=3000
     restart: always
     volumes:
       - ./volume/gitea/data:/data
