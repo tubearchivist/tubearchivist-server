@@ -16,6 +16,7 @@ services:
       - front
       - tubearchivist_network
       - umami_network
+      - gitea_network
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
@@ -87,8 +88,8 @@ services:
     env_file:
       - ./env/umami.env
     environment:
-      - VIRTUAL_HOST=www.stats.tubearchivist.com
-      - LETSENCRYPT_HOST=www.stats.tubearchivist.com
+      - VIRTUAL_HOST=www.stats.tubearchivist.com,stats.tubearchivist.com
+      - LETSENCRYPT_HOST=www.stats.tubearchivist.com,stats.tubearchivist.com
     depends_on:
       - umami-db
     restart: always
@@ -105,6 +106,38 @@ services:
     restart: always
     networks:
       - umami_network
+  # gitea
+  gitea:
+    image: gitea/gitea
+    container_name: gitea
+    hostname: gitea
+    env_file:
+      - ./env/gitea.env
+    environment:
+      - VIRTUAL_HOST=git.tubearchivist.com,www.git.tubearchivist.com
+      - LETSENCRYPT_HOST=git.tubearchivist.com,www.git.tubearchivist.com
+      - VIRTUAL_PORT=3000
+    restart: always
+    volumes:
+      - ./volume/gitea/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    expose:
+      - "3000"
+    ports:
+      - '127.0.0.1:22:22'
+    networks:
+      - gitea_network
+  gitea-db:
+    image: postgres:14
+    container_name: gitea-db
+    restart: always
+    env_file:
+      - ./env/gitea.env
+    volumes:
+      - ./volume/gitea/db:/var/lib/postgresql/data
+    networks:
+      - gitea_network
 
 networks:
   front:
@@ -112,4 +145,6 @@ networks:
   tubearchivist_network:
     driver: bridge
   umami_network:
+    driver: bridge
+  gitea_network:
     driver: bridge

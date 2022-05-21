@@ -6,6 +6,7 @@ config.json
 postgres.env
 tubearchivist.env
 umami.env
+gitea.env
 
 # example hooks
 docker-hook.json
