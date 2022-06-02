@@ -96,17 +96,13 @@ class Builder(RedisBase):
     def clone(self):
         """clone repo to destination"""
         print("clone repo")
-        clone = ["git", "clone", self.task_detail["clone"]]
-        pull = ["git", "pull", self.task_detail["clone"]]
-        os.chdir("clone")
-        try:
-            subprocess.run(clone, check=True)
-        except subprocess.CalledProcessError:
-            print("git pull instead")
-            os.chdir(self.task)
-            subprocess.run(pull, check=True)
-            os.chdir("../")
-        os.chdir("../")
+        repo_dir = os.path.join(self.CLONE_BASE, self.task_detail["name"])
+        if os.path.exists(repo_dir):
+            command = ["git", "-C", repo_dir, "pull"]
+        else:
+            command = ["git", "clone", self.task_detail["clone"], repo_dir]
+
+        subprocess.run(command, check=True)
 
     def build(self):
         """build the container"""
