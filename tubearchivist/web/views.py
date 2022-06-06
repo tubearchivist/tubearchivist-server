@@ -17,7 +17,7 @@ scheduler.add_job(
     trigger="cron",
     day="*",
     hour="*",
-    minute="2",
+    minute="0",
     name="docker_backup",
 )
 scheduler.start()
