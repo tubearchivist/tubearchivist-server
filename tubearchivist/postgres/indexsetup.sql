@@ -12,6 +12,12 @@ CREATE TABLE ta_docker_stats (
 -- index for time_stamp where queries
 CREATE INDEX docker_time_stamp ON ta_docker_stats (time_stamp DESC);
 
+-- ingest old csv archive
+COPY ta_docker_stats(time_stamp,time_stamp_human,last_updated,last_updated_human,stars,pulls)
+FROM '/dockerstats.csv'
+DELIMITER ','
+CSV HEADER;
+
 -- create release history table
 CREATE TABLE ta_release (
     id SERIAL NOT NULL PRIMARY KEY,
