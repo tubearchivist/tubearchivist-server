@@ -19,9 +19,11 @@ class DockerBackup:
 
     def run_backup(self):
         """public method to run"""
+        print("start hourly docker stats backup")
         self._get_image_stats()
         self._build_query()
         self._insert_line()
+        print("completed hourly docker stats backup")
 
     def _get_image_stats(self):
         """return dict for image"""
@@ -58,3 +60,8 @@ class DockerBackup:
         handler = DatabaseConnect()
         handler.db_execute(self.query)
         handler.db_close()
+
+
+def run_docker_backup():
+    """hourly task to store docker stats"""    
+    DockerBackup().run_backup()

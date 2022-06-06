@@ -1,11 +1,26 @@
 """holds all views and api endpoints"""
 
+from os import environ
+
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, jsonify, request
+from src.api_docker import run_docker_backup
 from src.webhook_docker import DockerHook
 from src.webhook_github import GithubBackup, GithubHook
 import markdown
 
 app = Flask(__name__)
+
+scheduler = BackgroundScheduler(timezone=environ.get("TZ"))
+scheduler.add_job(
+    run_docker_backup,
+    trigger="cron",
+    day="*",
+    hour="*",
+    minute="2",
+    name="docker_backup",
+)
+scheduler.start()
 
 
 @app.route("/")
