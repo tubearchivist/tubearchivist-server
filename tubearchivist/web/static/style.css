@@ -85,6 +85,13 @@ span {
     padding: 5px 20px;
     width: 60px;
 }
+.tiles {
+    display: flex;
+    justify-content: center;
+}
+.tiles img {
+    padding: 10px;
+}
 .block-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
