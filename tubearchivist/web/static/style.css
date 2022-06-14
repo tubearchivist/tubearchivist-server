@@ -91,6 +91,7 @@ span {
 }
 .tiles img {
     padding: 10px;
+    max-width: 200px;
 }
 .block-2 {
     display: grid;
@@ -186,5 +187,9 @@ span {
     }
     .social-item > a {
         padding: 2px;
+    }
+    .tiles {
+        display: block;
+        text-align: center;
     }
 }
