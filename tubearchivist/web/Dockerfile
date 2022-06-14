@@ -6,7 +6,7 @@ RUN apt-get clean && apt-get -y update && \
 
 ENV PATH=/root/.local/bin:$PATH
 COPY requirements.txt /requirements.txt
-RUN pip install --user -r requirements.txt
+RUN pip install --upgrade pip && pip install --user -r requirements.txt
 
 RUN mkdir /data
 
