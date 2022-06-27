@@ -67,6 +67,7 @@ span {
 }
 .tag-line {
     text-align: center;
+    margin: 10px 0;
 }
 .social-links {
     width: 100%;
