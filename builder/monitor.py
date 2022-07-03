@@ -57,6 +57,15 @@ class Monitor(RedisBase):
         subprocess.run(base + ["use", "tubearchivist"], check=True)
         subprocess.run(base + ["inspect", "--bootstrap"], check=True)
 
+    def check_stored(self):
+        """check for any stored task since last watch"""
+        task = self.get_tasks()
+        if task["tasks"]:
+            print("found stored task:")
+            for task_name in task["tasks"]:
+                print(task_name)
+                Builder(task_name).run()
+
     def watch(self):
         """watch for messages"""
         print("waiting for tasks")
@@ -110,13 +119,16 @@ class Builder(RedisBase):
 
     def build(self):
         """build the container"""
-        if not self.task_detail["clone"]:
-            build_command = self.task_detail["build"]
+        command_list = self.task_detail["build"]
+        if all(isinstance(i, list) for i in command_list):
+            for command in command_list:
+                print(f"running: {command}")
+                subprocess.run(command, check=True)
         else:
-            build_command = ["docker", "buildx"] + self.task_detail["build"]
-            build_command.append(os.path.join(self.CLONE_BASE, self.task))
-
-        subprocess.run(build_command, check=True)
+            command = ["docker", "buildx"] + self.task_detail["build"]
+            command.append(os.path.join(self.CLONE_BASE, self.task))
+            print(f"running: {command}")
+            subprocess.run(command, check=True)
 
     def remove_task(self):
         """remove task from redis queue"""
@@ -127,6 +139,7 @@ class Builder(RedisBase):
 if __name__ == "__main__":
     handler = Monitor()
     handler.bootstrap()
+    handler.check_stored()
     try:
         handler.watch()
     except KeyboardInterrupt:

@@ -437,13 +437,20 @@ class TaskHandler(RedisBase):
         if not self.tag_name:
             return self.repo_conf.get(task_name)
 
-        command = self.repo_conf.get(task_name)
-        for idx, command_part in enumerate(command):
-            if "$VERSION" in command_part:
-                subed = command_part.replace("$VERSION", self.tag_name)
-                command[idx] = subed
+        all_commands = self.repo_conf.get(task_name)
 
-        return command
+        if all(isinstance(i, list) for i in all_commands):
+            to_build_commands = []
+            for command in all_commands:
+                to_build_commands.append(self._replace_version(command))
+        else:
+            to_build_commands = self._replace_version(all_commands)
+
+        return to_build_commands
+
+    def _replace_version(self, command):
+        """replace version in str"""
+        return [i.replace("$VERSION", self.tag_name) for i in command]
 
     def set_pub(self):
         """set message to pub"""
