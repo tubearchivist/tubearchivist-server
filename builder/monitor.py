@@ -95,6 +95,10 @@ class Builder(RedisBase):
 
     def clone(self):
         """clone repo to destination"""
+        if not self.task_detail["clone"]:
+            print("skip clone")
+            return
+
         print("clone repo")
         repo_dir = os.path.join(self.CLONE_BASE, self.task_detail["name"])
         if os.path.exists(repo_dir):
@@ -106,8 +110,12 @@ class Builder(RedisBase):
 
     def build(self):
         """build the container"""
-        build_command = ["docker", "buildx"] + self.task_detail["build"]
-        build_command.append(os.path.join(self.CLONE_BASE, self.task))
+        if not self.task_detail["clone"]:
+            build_command = self.task_detail["build"]
+        else:
+            build_command = ["docker", "buildx"] + self.task_detail["build"]
+            build_command.append(os.path.join(self.CLONE_BASE, self.task))
+
         subprocess.run(build_command, check=True)
 
     def remove_task(self):

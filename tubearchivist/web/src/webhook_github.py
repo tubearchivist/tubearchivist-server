@@ -427,6 +427,8 @@ class TaskHandler(RedisBase):
             "name": self.repo_conf.get("gh_repo"),
             "build": build_command,
         }
+        if task_name == "sync_es":
+            task.update({"clone": False})
 
         self.conn.json().set(self.key, f".tasks.{repo}", task)
 
