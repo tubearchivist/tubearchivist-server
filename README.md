@@ -11,7 +11,7 @@ Flask API to render the html website. Build with Docker. API endpoints to:
 
 ### Listen for DockerHub hooks to
 - Send notifications for new unstable builds to Discord
-- Send nitifications for new release builds to Discord
+- Send notifications for new release builds to Discord
 
 ## Builder
 Standalone python script subscribed to Redis waiting for build commands.
