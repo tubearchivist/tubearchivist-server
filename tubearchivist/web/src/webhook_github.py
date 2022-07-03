@@ -62,7 +62,7 @@ class GithubHook(WebhookBase):
             print("commit not on master")
             return
 
-        self._check_roadmap()
+        self._check_readme()
 
         build_message = self.check_commit_message()
         if not build_message:
@@ -85,14 +85,16 @@ class GithubHook(WebhookBase):
         first_line = message.split("\n")[0]
         return first_line.endswith(self.repo_conf["unstable_keyword"])
 
-    def _check_roadmap(self):
-        """check if roadmap update needed"""
+    def _check_readme(self):
+        """check readme if roadmap or es update needed"""
         modified = [i["modified"] for i in self.hook["commits"]]
         for i in modified:
             if "README.md" in i:
                 print("README updated, check roadmap")
                 RoadmapHook(self.repo_conf, self.ROADMAP_HOOK_URL).update()
-                break
+            if "docker-compose.yml" in i:
+                print("docker-compose updated, check es version")
+                EsVersionSync(self.repo_conf).run()
 
     def process_release_hook(self):
         """build and process for new release"""
@@ -325,6 +327,52 @@ class RoadmapHook:
         handler = DatabaseConnect()
         _ = handler.db_execute(query)
         handler.db_close()
+
+
+class EsVersionSync:
+    """check if bbilly1/tubearchivist-es needs updating"""
+
+    REPO = "repos/tubearchivist/tubearchivist"
+    COMPOSE = f"https://api.github.com/{REPO}/contents/docker-compose.yml"
+    IMAGE = "bbilly1/tubearchivist-es"
+    TAGS = f"https://hub.docker.com/v2/repositories/{IMAGE}/tags"
+
+    def __init__(self, repo_conf):
+        self.repo_conf = repo_conf
+        self.expected = False
+        self.current = False
+
+    def run(self):
+        """run check, send task if needed"""
+        self.get_expected()
+        self.get_current()
+
+        if self.expected == self.current:
+            print(f"{self.IMAGE} on expected {self.expected}")
+        else:
+            print(f"bump {self.IMAGE} {self.current} - {self.expected}")
+            self.build_task()
+
+    def get_expected(self):
+        """get expected es version from readme"""
+        response = requests.get(self.COMPOSE).json()
+        content = base64.b64decode(response["content"]).decode()
+        line = [i for i in content.split("\n") if self.IMAGE in i][0]
+        self.expected = line.split()[-1]
+
+    def get_current(self):
+        """get current version from docker hub"""
+        response = requests.get(self.TAGS).json()
+        all_tags = [i.get("name") for i in response["results"]]
+        all_tags.pop(0)
+        all_tags.sort()
+
+        self.current = all_tags[-1]
+
+    def build_task(self):
+        """build task for builder"""
+        task = TaskHandler(self.repo_conf, tag_name=self.expected)
+        task.create_task("sync_es")
 
 
 class RedisBase:

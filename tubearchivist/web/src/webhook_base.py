@@ -24,6 +24,13 @@ class WebhookBase:
                 "-t", "bbilly1/tubearchivist:unstable",
                 "-t", "bbilly1/tubearchivist:$VERSION", "--push"
             ],
+            "sync_es": [
+                "docker", "image", "pull", "elasticsearch:$VERSION", "&&",
+                "docker", "tag", "elasticsearch:$VERSION", "bbilly1/tubearchivist-es", "&&",
+                "docker", "tag", "elasticsearch:$VERSION", "bbilly1/tubearchivist-es:$VERSION", "&&",
+                "docker", "push", "bbilly1/tubearchivist-es", "&&",
+                "docker", "push", "bbilly1/tubearchivist-es:$VERSION"
+            ],
             "discord_unstable_hook": environ.get("DOCKER_UNSTABLE_HOOK_URL"),
             "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
         }
