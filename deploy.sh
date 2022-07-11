@@ -2,7 +2,7 @@
 # deploy the tube archivist website
 
 test_host="tubearchivist-website.local"
-public_host="tubearchivist.com"
+public_host="vps3"
 
 function rebuild_test {
     echo "rebuild testing environment"
