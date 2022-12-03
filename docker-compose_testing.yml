@@ -18,6 +18,8 @@ services:
       - ./volume/tubearchivist/data:/data
     env_file:
       - ./env/tubearchivist.env
+    environment:
+      - discord=gkWMk9Qupk
     expose:
       - "8080"
   # backend postgres

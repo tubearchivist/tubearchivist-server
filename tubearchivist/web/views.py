@@ -3,7 +3,7 @@
 from os import environ
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, redirect
 from src.api_docker import run_docker_backup
 from src.webhook_docker import DockerHook
 from src.webhook_github import GithubBackup, GithubHook
@@ -31,6 +31,13 @@ def home():
     return render_template(
         'home.html', latest=latest, latest_notes=latest_notes
     )
+
+
+@app.route("/discord")
+def discord_redirect():
+    """redirect to current discord invite link"""
+    invite = environ.get("discord")
+    return redirect(f"https://discord.gg/{invite}", code=302)
 
 
 @app.route("/api/release/<release_id>/")
