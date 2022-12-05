@@ -3,13 +3,21 @@
 import base64
 import json
 from datetime import datetime
-from hashlib import sha256
+from hashlib import sha256, md5
 from hmac import HMAC, compare_digest
+
+from bs4 import BeautifulSoup
 import requests
 import redis
 
 from src.db import DatabaseConnect
 from src.webhook_base import WebhookBase
+
+
+HOOK_URL = {
+    "tubearchivist/browser-extension": "https://discord.com/api/webhooks/1048456394979946547/OskydG_dgtcHxPVn-khyKDy_qu9J4UbUo9ipGSKVaS6CzvuMRkuPq3aXpIYds2Zuhr3A",
+    "tubearchivist/tubearchivist": "https://discord.com/api/webhooks/1048906149463867472/QREIvEFxeUzflxvX6W-cpbE47-HwcYcuA3hFzcMhljLpTzuBd2LvWvrL-g7-4v6JpDIu",
+}
 
 
 class GithubHook(WebhookBase):
@@ -52,6 +60,9 @@ class GithubHook(WebhookBase):
         if "release" in self.hook:
             # is a release hook
             self.process_release_hook()
+
+        if "pull_request" in self.hook or "issue" in self.hook:
+            CommentNotification(self.hook).run()
 
         return False
 
@@ -112,6 +123,161 @@ class GithubHook(WebhookBase):
         filename = f"/data/hooks/github_hook-{now}.json"
         with open(filename, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.hook))
+
+
+class CommentNotification:
+    """process comment notification hooks"""
+
+    def __init__(self, data):
+        self.data = data
+        self.type = False
+        self.repo = False
+        self.color_hash = ""
+
+    def run(self):
+        """run all"""
+        self.dedect()
+        if not self.type:
+            print("skip hook run")
+            return
+
+        hook_data = self.build_hook_data()
+        self.send_hook(hook_data)
+
+    def dedect(self):
+        """dedect origin"""
+        if "issue" in self.data:
+            self._process_issue_hook()
+        elif "pull_request" in self.data:
+            self._process_pull_request_hook()
+
+        print(self.type)
+
+    def _process_issue_hook(self):
+        """process incomming issue message"""
+        if self.data["issue"].get("pull_request", False):
+            origin = "pull request"
+            self.color_hash += "pullrequest"
+        else:
+            origin = "issue"
+            self.color_hash += "issue"
+
+        if self.data["action"] == "opened":
+            self.type = f"New {origin} opened"
+        elif self.data["action"] == "created":
+            self.type = f"New comment on {origin}"
+        elif self.data["action"] == "closed":
+            self.type = f"Closed {origin}"
+
+    def _process_pull_request_hook(self):
+        """send notification about pull requests"""
+        self.color_hash += "pullrequest"
+        if self.data["action"] == "opened":
+            # new pull request
+            self.type = "New pull request opened"
+        elif self.data["action"] == "closed":
+            # pull request is closed
+            is_merged = self.data["pull_request"].get("merged_at")
+            if is_merged:
+                self.type = "Pull request merged"
+            else:
+                self.type = "Pull request closed"
+
+    def build_hook_data(self):
+        """build author object"""
+        hook_data = {
+            "embeds": [
+                {
+                    "author": self._parse_author(),
+                    "title": self._parse_title(),
+                    "url": self._parse_comment_url(),
+                    "color": self._get_color(),
+                }
+            ]
+        }
+        description = self._prase_description()
+        if description:
+            hook_data["embeds"][0].update({"description": description})
+
+        return hook_data
+
+    def _parse_author(self):
+        """build author dict"""
+        return {
+            "name": self.data["sender"]["login"],
+            "icon_url": self.data["sender"]["avatar_url"],
+            "url": self.data["sender"]["html_url"],
+        }
+
+    def _parse_title(self):
+        """build title"""
+        self.repo = self.data["repository"]["full_name"]
+        if "issue" in self.data:
+            name = self.data["issue"]["title"]
+            number = self.data["issue"]["number"]
+        elif "pull_request" in self.data:
+            name = self.data["pull_request"]["title"]
+            number = self.data["pull_request"]["number"]
+        else:
+            raise ValueError("action not found in data")
+
+        title = f"[{self.repo}] {self.type} #{number}: {name}"
+        self.color_hash += f"{self.repo}-{number}"
+        return title
+
+    def _parse_comment_url(self):
+        """build comment url"""
+        if "issue" in self.data:
+            html_url = self.data["issue"]["html_url"]
+            comment_id = self.data["issue"]["id"]
+        else:
+            html_url = self.data["pull_request"]["html_url"]
+            comment_id = self.data["pull_request"]["id"]
+
+        comment_url = f"{html_url}#issue-{comment_id}"
+
+        return comment_url
+
+    def _prase_description(self):
+        """extract text from html description"""
+        if "comment" in self.data:
+            html = self.data["comment"]["body"]
+        elif "issue" in self.data:
+            html = self.data["issue"]["body"]
+        elif "pull_request" in self.data:
+            html = self.data["pull_request"]["body"]
+        else:
+            print("no description text found")
+            return False
+
+        if self.data["action"] == "closed":
+            return False
+
+        text = BeautifulSoup(html, features="html.parser").text
+
+        if len(text) >= 500:
+            text = text[:500].rsplit(" ", 1)[0] + " ..."
+
+        return text
+
+    def _get_color(self):
+        """build color hash"""
+        hex_str = md5(self.color_hash.encode("utf-8")).hexdigest()[:6].encode()
+        discord_col = int(hex_str, 16)
+        return discord_col
+
+    def send_hook(self, hook_data):
+        """send hook"""
+        url = HOOK_URL.get(self.repo)
+        if not url:
+            print(f"{self.repo} not found in HOOK_URL")
+            return
+
+        response = requests.post(
+            f"{url}?wait=true", json=hook_data, timeout=10
+        )
+        if not response.ok:
+            print(response.json())
 
 
 class GithubBackup:
