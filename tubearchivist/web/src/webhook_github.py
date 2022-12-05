@@ -308,7 +308,7 @@ class GithubBackup:
 
     def ingest_build_line(self):
         """ingest latest release into postgres"""
-        response = requests.get(self.URL + self.tag)
+        response = requests.get(self.URL + self.tag, timeout=10)
         if not response.ok:
             print(response.text)
             raise ValueError
@@ -424,7 +424,7 @@ class RoadmapHook:
         user = self.repo_conf.get("gh_user")
         repo = self.repo_conf.get("gh_repo")
         url = f"https://api.github.com/repos/{user}/{repo}/contents/README.md"
-        response = requests.get(url).json()
+        response = requests.get(url, timeout=10).json()
         content = base64.b64decode(response["content"]).decode()
         paragraphs = [i.strip() for i in content.split("##")]
         for paragraph in paragraphs:
@@ -452,7 +452,7 @@ class RoadmapHook:
     def delete_webhook(self, message_id):
         """delete old message"""
         url = f"{self.hook_url}/messages/{message_id}"
-        response = requests.delete(url)
+        response = requests.delete(url, timeout=10)
         print(response)
 
     def send_message(self):
@@ -468,7 +468,9 @@ class RoadmapHook:
                 "color": 10555
             }]
         }
-        response = requests.post(f"{self.hook_url}?wait=true", json=data)
+        response = requests.post(
+            f"{self.hook_url}?wait=true", json=data, timeout=10
+        )
         print(response)
         print(response.text)
 
@@ -521,14 +523,14 @@ class EsVersionSync:
 
     def get_expected(self):
         """get expected es version from readme"""
-        response = requests.get(self.COMPOSE).json()
+        response = requests.get(self.COMPOSE, timeout=10).json()
         content = base64.b64decode(response["content"]).decode()
         line = [i for i in content.split("\n") if self.IMAGE in i][0]
         self.expected = line.split()[-1]
 
     def get_current(self):
         """get current version from docker hub"""
-        response = requests.get(self.TAGS).json()
+        response = requests.get(self.TAGS, timeout=10).json()
         all_tags = [i.get("name") for i in response["results"]]
         all_tags.pop(0)
         all_tags.sort()
