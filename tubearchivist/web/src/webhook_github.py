@@ -253,6 +253,9 @@ class CommentNotification:
         if self.data["action"] == "closed":
             return False
 
+        if not html:
+            return "No description provided."
+
         text = BeautifulSoup(html, features="html.parser").text
 
         if len(text) >= 500:

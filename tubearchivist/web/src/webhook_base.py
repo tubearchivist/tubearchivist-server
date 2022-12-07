@@ -33,6 +33,11 @@ class WebhookBase:
             ],
             "discord_unstable_hook": environ.get("DOCKER_UNSTABLE_HOOK_URL"),
             "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
+        },
+        "browser-extension": {
+            "gh_user": "tubearchivist",
+            "gh_repo": "browser-extension",
+            "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
         }
     }
     ROADMAP_HOOK_URL = environ.get("ROADMAP_HOOK_URL")
