@@ -140,6 +140,14 @@ services:
       - ./volume/gitea/db:/var/lib/postgresql/data
     networks:
       - gitea_network
+  redditbot:
+    container_name: redditbot
+    restart: unless-stopped
+    image: bbilly1/redditbot
+    volumes:
+      - ./volume/redditbot/data:/data
+    env_file:
+      - ./env/redditbot.env
 
 networks:
   front:
