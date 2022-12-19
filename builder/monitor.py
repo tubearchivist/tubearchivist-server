@@ -4,6 +4,8 @@ import json
 import subprocess
 import os
 
+from datetime import datetime
+
 import redis
 
 
@@ -46,6 +48,20 @@ class Monitor(RedisBase):
             self._create_builder()
         else:
             print("tubearchivist builder already created")
+
+    def create_queue(self):
+        """set initial json object for queue"""
+        if self.conn.execute_command(f"EXISTS {self.TASK_KEY}"):
+            print(f"{self.TASK_KEY} already exists")
+            return
+
+        message = {
+            "created": int(datetime.now().strftime("%s")),
+            "tasks": {}
+        }
+        self.conn.execute_command(
+            "JSON.SET", self.TASK_KEY, ".", json.dumps(message)
+        )
 
     @staticmethod
     def _create_builder():
@@ -139,6 +155,7 @@ class Builder(RedisBase):
 if __name__ == "__main__":
     handler = Monitor()
     handler.bootstrap()
+    handler.create_queue()
     handler.check_stored()
     try:
         handler.watch()
