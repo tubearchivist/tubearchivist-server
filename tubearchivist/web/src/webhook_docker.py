@@ -74,7 +74,7 @@ class DockerHook(WebhookBase):
         user = self.repo_conf.get("gh_user")
         repo = self.repo_conf.get("gh_repo")
         url = f"https://api.github.com/repos/{user}/{repo}/commits/master"
-        response = requests.get(url).json()
+        response = requests.get(url, timeout=20).json()
         commit_url = response["html_url"]
         first_line_message = response["commit"]["message"].split("\n")[0]
 
@@ -83,7 +83,7 @@ class DockerHook(WebhookBase):
     @staticmethod
     def _forward_message(message_data, url):
         """forward message to discrod"""
-        response = requests.post(url, json=message_data)
+        response = requests.post(url, json=message_data, timeout=20)
         if not response.ok:
             print(response.json())
             return {"success": False}

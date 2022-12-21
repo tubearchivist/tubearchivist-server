@@ -27,7 +27,7 @@ class DockerBackup:
 
     def _get_image_stats(self):
         """return dict for image"""
-        response = requests.get(self.URL).json()
+        response = requests.get(self.URL, timeout=20).json()
         now = datetime.now()
 
         last_updated = response["last_updated"]
