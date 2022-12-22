@@ -5,6 +5,7 @@ from os import environ
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, jsonify, request, redirect
 from src.api_docker import run_docker_backup
+from src.ta_redis import VersionCheckCounter
 from src.webhook_docker import DockerHook
 from src.webhook_github import GithubBackup, GithubHook
 import markdown
@@ -44,6 +45,7 @@ def discord_redirect():
 def release(release_id):
     """api release"""
     result = GithubBackup(release_id).get_tag()
+    VersionCheckCounter().increase()
     return jsonify(result)
 
 

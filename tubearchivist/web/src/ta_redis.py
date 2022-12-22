@@ -86,3 +86,16 @@ class TaskHandler(RedisBase):
     def set_pub(self):
         """set message to pub"""
         self.conn.publish(self.key, self.repo_conf.get("gh_repo"))
+
+
+class VersionCheckCounter(RedisBase):
+    """count requests to version check API endpoint"""
+
+    def __init__(self):
+        super().__init__()
+        self.timestamp = datetime.now().strftime("%Y%m%d")
+        self.key = f"{self.NAME_SPACE}versioncounter:{self.timestamp}"
+
+    def increase(self):
+        """increase counter by one"""
+        self.conn.execute_command("INCR", self.key)
