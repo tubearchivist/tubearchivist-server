@@ -12,7 +12,10 @@ services:
   # main flask site
   tubearchivist:
     container_name: tubearchivist
-    build: ./tubearchivist/web
+    build:
+      context: ./tubearchivist/web
+      args:
+        - INSTALL_DEBUG=1
     restart: always
     volumes:
       - ./volume/tubearchivist/data:/data
