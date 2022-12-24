@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 from hashlib import sha256, md5
 from hmac import HMAC, compare_digest
+from os import environ
 
 from bs4 import BeautifulSoup
 import requests
@@ -15,8 +16,8 @@ from src.webhook_base import WebhookBase
 
 
 HOOK_URL = {
-    "tubearchivist/browser-extension": "https://discord.com/api/webhooks/1048456394979946547/OskydG_dgtcHxPVn-khyKDy_qu9J4UbUo9ipGSKVaS6CzvuMRkuPq3aXpIYds2Zuhr3A",
-    "tubearchivist/tubearchivist": "https://discord.com/api/webhooks/1048906149463867472/QREIvEFxeUzflxvX6W-cpbE47-HwcYcuA3hFzcMhljLpTzuBd2LvWvrL-g7-4v6JpDIu",
+    "tubearchivist/browser-extension": environ.get("GITHUB_COMPANION_HOOK_URL"),
+    "tubearchivist/tubearchivist": environ.get("GITHUB_TA_HOOK_URL"),
 }
 
 
