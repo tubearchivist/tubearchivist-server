@@ -18,6 +18,14 @@ FROM '/dockerstats.csv'
 DELIMITER ','
 CSV HEADER;
 
+-- create ta_version_stats table
+CREATE TABLE ta_version_stats (
+    id SERIAL NOT NULL PRIMARY KEY,
+    ping_date DATE NOT NULL,
+    ping_count INT NOT NULL,
+    latest_version VARCHAR(10) NOT NULL
+);
+
 -- create release history table
 CREATE TABLE ta_release (
     id SERIAL NOT NULL PRIMARY KEY,

@@ -5,7 +5,7 @@ from os import environ
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, jsonify, request, redirect
 from src.api_docker import run_docker_backup
-from src.ta_redis import VersionCheckCounter
+from src.versioncheck import VersionCheckCounter, run_version_check_archive
 from src.webhook_docker import DockerHook
 from src.webhook_github import GithubBackup, GithubHook
 import markdown
@@ -20,6 +20,14 @@ scheduler.add_job(
     hour="*",
     minute="0",
     name="docker_backup",
+)
+scheduler.add_job(
+    run_version_check_archive,
+    trigger="cron",
+    day="*",
+    hour="1",
+    minute="0",
+    name="version_backup",
 )
 scheduler.start()
 
