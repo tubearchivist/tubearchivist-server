@@ -24,6 +24,7 @@ printf "\n  -> replace\n"
 ssh $local_host "docker exec -i postgres psql -U archivist -c 'DROP TABLE IF EXISTS ta_docker_stats;'"
 ssh $local_host "docker exec -i postgres psql -U archivist -c 'DROP TABLE IF EXISTS ta_release;'"
 ssh $local_host "docker exec -i postgres psql -U archivist -c 'DROP TABLE IF EXISTS ta_roadmap;'"
+ssh $local_host "docker exec -i postgres psql -U archivist -c 'DROP TABLE IF EXISTS ta_version_stats;'"
 ssh $local_host 'docker exec -i postgres psql -U archivist -d archivist < backup/backup'
 ssh $local_host "trash backup/backup"
 printf "\n  -> done\n"
