@@ -18,7 +18,6 @@ services:
       - tubearchivist_network
       - umami_network
       - gitea_network
-      - members_network
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
@@ -149,39 +148,6 @@ services:
       - ./volume/redditbot/data:/data
     env_file:
       - ./env/redditbot.env
-  # members
-  members_backend_nginx:
-    build: ./members/nginx
-    container_name: members_backend_nginx
-    restart: always
-    expose:
-      - "8000"
-    environment:
-      - VIRTUAL_HOST=members.tubearchivist.com
-      - LETSENCRYPT_HOST=members.tubearchivist.com
-      - VIRTUAL_PORT=8000
-    depends_on:
-      - members_web
-    networks:
-      - members_network
-  members_web:
-    container_name: members_web
-    build: ./members/web
-    restart: always
-    expose:
-      - "8080"
-    volumes:
-      - ./volume/members/web/data:/data
-    networks:
-      - members_network
-  members_pubsub:
-    container_name: members_pubsub
-    build: ./members/hook
-    restart: always
-    expose:
-      - "8081"
-    networks:
-      - members_network
 
 networks:
   front:
@@ -191,6 +157,4 @@ networks:
   umami_network:
     driver: bridge
   gitea_network:
-    driver: bridge
-  members_network:
     driver: bridge
