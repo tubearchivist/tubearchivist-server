@@ -27,9 +27,6 @@ function docker_publish {
     ssh "$public_host" 'docker compose -f docker/docker-compose.yml up -d --build'
 }
 
-# check package versions in requirements.txt for updates
-python version_check.py
-
 if [[ $1 == "test" ]]; then
     rebuild_test
 elif [[ $1 == "docker" ]]; then
