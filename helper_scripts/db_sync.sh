@@ -12,11 +12,11 @@ echo "------------------------------------------------------------"
 printf "\n  -> backup\n"
 ssh $remote_host 'docker exec postgres pg_dump -U archivist | gzip > backup.gz'
 printf "\n  -> download\n"
-rsync --progress -r --delete-after -e ssh $remote_host:backup.gz /tmp/backup.gz
+rsync --progress -r --remove-source-files -e ssh $remote_host:backup.gz /tmp/backup.gz
 
 # sync
 printf "\n  -> sync\n"
-rsync --progress -r --delete-after /tmp/backup.gz -e ssh $local_host:backup
+rsync --progress -r --remove-source-files /tmp/backup.gz -e ssh $local_host:backup
 ssh $local_host 'gzip -df backup/backup.gz'
 
 # replace
