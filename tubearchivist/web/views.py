@@ -5,6 +5,7 @@ from os import environ
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, jsonify, request, redirect
 from src.api_docker import run_docker_backup
+from src.dataset import run_chart_recreate
 from src.versioncheck import VersionCheckCounter, run_version_check_archive
 from src.webhook_docker import DockerHook
 from src.webhook_github import GithubBackup, GithubHook
@@ -28,6 +29,14 @@ scheduler.add_job(
     hour="1",
     minute="0",
     name="version_backup",
+)
+scheduler.add_job(
+    run_chart_recreate,
+    trigger="cron",
+    day="*",
+    hour="2",
+    minute="0",
+    name="chart_recreate"
 )
 scheduler.start()
 
