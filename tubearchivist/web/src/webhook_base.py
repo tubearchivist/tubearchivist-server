@@ -38,6 +38,13 @@ class WebhookBase:
             "gh_user": "tubearchivist",
             "gh_repo": "browser-extension",
             "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
+        },
+        "docs": {
+            "gh_user": "tubearchivist",
+            "gh_repo": "docs",
+            "rebuild": [
+                ["docker", "compose", "-f", "../docker/docker-compose.yml", "up", "-d", "--build", "docs"]
+            ]
         }
     }
     ROADMAP_HOOK_URL = environ.get("ROADMAP_HOOK_URL")

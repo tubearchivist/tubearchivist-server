@@ -74,6 +74,10 @@ class GithubHook(WebhookBase):
             print("commit not on master")
             return
 
+        if self.repo == "docs":
+            TaskHandler(self.repo_conf).create_task("rebuild")
+            return
+
         self._check_readme()
 
         build_message = self.check_commit_message()

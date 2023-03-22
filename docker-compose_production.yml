@@ -60,6 +60,18 @@ services:
       - "8080"
     networks:
       - tubearchivist_network
+  docs:
+    build: https://github.com/tubearchivist/docs.git
+    container_name: docs
+    restart: always
+    expose:
+      - "8081"
+    environment:
+      - NGINX_PORT=8081
+      - VIRTUAL_HOST=docs.tubearchivist.com
+      - LETSENCRYPT_HOST=docs.tubearchivist.com
+    networks:
+      - tubearchivist_network
   # backend postgres
   postgres:
     image: postgres:14
