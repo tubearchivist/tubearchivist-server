@@ -104,8 +104,8 @@ services:
     env_file:
       - ./env/umami.env
     environment:
-      - VIRTUAL_HOST=www.stats.tubearchivist.com,stats.tubearchivist.com
-      - LETSENCRYPT_HOST=www.stats.tubearchivist.com,stats.tubearchivist.com
+      - VIRTUAL_HOST=stats.tubearchivist.com
+      - LETSENCRYPT_HOST=stats.tubearchivist.com
     depends_on:
       - umami-db
     restart: always
@@ -129,8 +129,8 @@ services:
     env_file:
       - ./env/gitea.env
     environment:
-      - VIRTUAL_HOST=git.tubearchivist.com,www.git.tubearchivist.com
-      - LETSENCRYPT_HOST=git.tubearchivist.com,www.git.tubearchivist.com
+      - VIRTUAL_HOST=git.tubearchivist.com
+      - LETSENCRYPT_HOST=git.tubearchivist.com
     restart: always
     volumes:
       - ./volume/gitea/data:/data
