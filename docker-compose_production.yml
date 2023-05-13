@@ -74,11 +74,11 @@ services:
       - tubearchivist_network
   # backend postgres
   postgres:
-    image: postgres:14
+    image: postgres:15
     container_name: postgres
     restart: always
     volumes:
-      - ./volume/postgres:/var/lib/postgresql/data/
+      - ./volume/tubearchivist/postgres15:/var/lib/postgresql/data/
     env_file:
       - ./env/postgres.env
     expose:
@@ -97,7 +97,7 @@ services:
       - tubearchivist_network
   # umami stats
   umami:
-    image: ghcr.io/mikecao/umami:postgresql-latest
+    image: ghcr.io/umami-software/umami:postgresql-latest
     container_name: umami
     expose:
       - "3000"
@@ -112,12 +112,12 @@ services:
     networks:
       - umami_network
   umami-db:
-    image: postgres:14
+    image: postgres:15
     container_name: umami-db
     env_file:
       - ./env/umami.env
     volumes:
-      - ./volume/umami/db:/var/lib/postgresql/data
+      - ./volume/umami/postgres15:/var/lib/postgresql/data
     restart: always
     networks:
       - umami_network
@@ -143,13 +143,13 @@ services:
     networks:
       - gitea_network
   gitea-db:
-    image: postgres:14
+    image: postgres:15
     container_name: gitea-db
     restart: always
     env_file:
       - ./env/gitea.env
     volumes:
-      - ./volume/gitea/db:/var/lib/postgresql/data
+      - ./volume/gitea/postgres15:/var/lib/postgresql/data
     networks:
       - gitea_network
   redditbot:
