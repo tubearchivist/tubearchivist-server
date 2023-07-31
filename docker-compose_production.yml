@@ -48,7 +48,7 @@ services:
       - tubearchivist_network
   tubearchivist:
     container_name: tubearchivist
-    build: ./tubearchivist/web
+    build: ../builder/clone/tubearchivist-website/tubearchivist/web
     restart: always
     volumes:
       - ./volume/tubearchivist/data:/data
