@@ -45,14 +45,6 @@ class WebhookBase:
             "rebuild": [
                 ["docker", "compose", "-f", "../docker/docker-compose.yml", "up", "-d", "--build", "docs"]
             ]
-        },
-        "tubearchivist-server": {
-            "gh_user": "tubearchivist",
-            "gh_repo": "tubearchivist-server",
-            "unstable_keyword": "#build",
-            "rebuild": [
-                ["docker", "compose", "-f", "../docker/docker-compose.yml", "up", "-d", "--build", "tubearchivist"]
-            ]
         }
     }
     ROADMAP_HOOK_URL = environ.get("ROADMAP_HOOK_URL")

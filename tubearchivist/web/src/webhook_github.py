@@ -79,14 +79,6 @@ class GithubHook(WebhookBase):
             TaskHandler(self.repo_conf).create_task("rebuild")
             return
 
-        if self.repo == "tubearchivist-server":
-            to_rebuild = self.check_commit_message()
-            if to_rebuild:
-                TaskHandler(self.repo_conf).create_task("rebuild")
-            else:
-                print("build keyword not found in commit message")
-            return
-
         self._check_readme()
 
         build_message = self.check_commit_message()
