@@ -27,7 +27,7 @@ services:
       - "8080"
   # backend postgres
   postgres:
-    image: postgres:14
+    image: postgres:15
     container_name: postgres
     restart: always
     volumes:

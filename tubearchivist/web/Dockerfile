@@ -1,5 +1,5 @@
 # builder
-FROM python:3.10.9-slim-bullseye as builder
+FROM python:3.11.3-slim-bullseye as builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential
@@ -8,7 +8,7 @@ COPY requirements.txt /requirements.txt
 RUN pip install --user -r requirements.txt
 
 # final
-FROM python:3.10.9-slim-bullseye as tubearchivist-web
+FROM python:3.11.3-slim-bullseye as tubearchivist-web
 
 ARG INSTALL_DEBUG
 ENV PYTHONUNBUFFERED 1

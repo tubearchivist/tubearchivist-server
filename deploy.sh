@@ -24,7 +24,7 @@ function docker_publish {
     rsync -a --progress --delete helper_scripts $public_host:
     rsync -a --progress --delete builder/ $public_host:builder
     ssh "$public_host" "mkdir -p builder/clone"
-    ssh "$public_host" 'docker compose -f docker/docker-compose.yml up -d --build'
+    ssh "$public_host" 'docker compose -f docker/docker-compose.yml up -d --build tubearchivist'
 }
 
 if [[ $1 == "test" ]]; then
