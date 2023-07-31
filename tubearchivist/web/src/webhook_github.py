@@ -79,7 +79,7 @@ class GithubHook(WebhookBase):
             TaskHandler(self.repo_conf).create_task("rebuild")
             return
 
-        if self.repo == "website":
+        if self.repo == "tubearchivist-server":
             to_rebuild = self.check_commit_message()
             if to_rebuild:
                 TaskHandler(self.repo_conf).create_task("rebuild")
