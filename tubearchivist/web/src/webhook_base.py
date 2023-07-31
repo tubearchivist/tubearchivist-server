@@ -46,7 +46,7 @@ class WebhookBase:
                 ["docker", "compose", "-f", "../docker/docker-compose.yml", "up", "-d", "--build", "docs"]
             ]
         },
-        "website": {
+        "tubearchivist-server": {
             "gh_user": "tubearchivist",
             "gh_repo": "tubearchivist-server",
             "unstable_keyword": "#build",
