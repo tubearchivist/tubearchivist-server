@@ -58,6 +58,13 @@ class WebhookBase:
             ],
             "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
         },
+        "discord-bot": {
+            "gh_user": "tubearchivist",
+            "gh_repo": "discord-bot",
+            "rebuild": [
+                ["docker", "compose", "-f", "../docker/docker-compose.yml", "up", "-d", "--build", "discord-bot"]
+            ],
+        },
     }
     ROADMAP_HOOK_URL = environ.get("ROADMAP_HOOK_URL")
     GH_HOOK_SECRET = environ.get("GH_HOOK_SECRET")

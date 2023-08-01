@@ -72,6 +72,14 @@ services:
       - LETSENCRYPT_HOST=docs.tubearchivist.com
     networks:
       - tubearchivist_network
+  discord-bot:
+    container_name: discord-bot
+    build: https://github.com/tubearchivist/discord-bot.git
+    restart: always
+    env_file:
+      - ./env/discord-bot.env
+    networks:
+      - tubearchivist_network
   # backend postgres
   postgres:
     image: postgres:15

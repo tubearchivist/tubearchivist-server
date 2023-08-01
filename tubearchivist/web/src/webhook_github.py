@@ -75,7 +75,7 @@ class GithubHook(WebhookBase):
             print("commit not on master")
             return
 
-        if self.repo == "docs":
+        if self.repo in ["docs", "discord-bot"]:
             TaskHandler(self.repo_conf).create_task("rebuild")
             return
 

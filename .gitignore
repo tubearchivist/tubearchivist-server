@@ -8,6 +8,7 @@ tubearchivist.env
 umami.env
 gitea.env
 redditbot.env
+discord-bot.env
 
 # example hooks
 docker-hook.json
