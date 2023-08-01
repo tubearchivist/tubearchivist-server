@@ -45,7 +45,19 @@ class WebhookBase:
             "rebuild": [
                 ["docker", "compose", "-f", "../docker/docker-compose.yml", "up", "-d", "--build", "docs"]
             ]
-        }
+        },
+        "jellyfin": {
+            "gh_user": "tubearchivist",
+            "gh_repo": "jellyfin",
+            "docker_user": "bbilly1",
+            "docker_repo": "tubearchivist-jf",
+            "build_release": [
+                "build", "--platform", "linux/amd64,linux/arm64",
+                "-t", "bbilly1/tubearchivist-jf",
+                "-t", "bbilly1/tubearchivist-jf:$VERSION", "--push"
+            ],
+            "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
+        },
     }
     ROADMAP_HOOK_URL = environ.get("ROADMAP_HOOK_URL")
     GH_HOOK_SECRET = environ.get("GH_HOOK_SECRET")
