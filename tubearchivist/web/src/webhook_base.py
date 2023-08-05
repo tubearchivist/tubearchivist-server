@@ -48,7 +48,7 @@ class WebhookBase:
         },
         "tubearchivist-jf": {
             "gh_user": "tubearchivist",
-            "gh_repo": "jellyfin",
+            "gh_repo": "tubearchivist-jf",
             "docker_user": "bbilly1",
             "docker_repo": "tubearchivist-jf",
             "build_release": [
