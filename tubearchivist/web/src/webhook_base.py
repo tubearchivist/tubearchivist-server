@@ -46,7 +46,7 @@ class WebhookBase:
                 ["docker", "compose", "-f", "../docker/docker-compose.yml", "up", "-d", "--build", "docs"]
             ]
         },
-        "jellyfin": {
+        "tubearchivist-jf": {
             "gh_user": "tubearchivist",
             "gh_repo": "jellyfin",
             "docker_user": "bbilly1",
