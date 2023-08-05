@@ -25,9 +25,9 @@ class WebhookBase:
                 "-t", "bbilly1/tubearchivist:$VERSION", "--push"
             ],
             "sync_es": [
-                ["docker", "image", "pull", "elasticsearch:$VERSION"],
-                ["docker", "tag", "elasticsearch:$VERSION", "bbilly1/tubearchivist-es"],
-                ["docker", "tag", "elasticsearch:$VERSION", "bbilly1/tubearchivist-es:$VERSION"],
+                ["docker", "image", "pull", "docker.elastic.co/elasticsearch/elasticsearch:$VERSION"],
+                ["docker", "tag", "docker.elastic.co/elasticsearch/elasticsearch:$VERSION", "bbilly1/tubearchivist-es"],
+                ["docker", "tag", "docker.elastic.co/elasticsearch/elasticsearch:$VERSION", "bbilly1/tubearchivist-es:$VERSION"],
                 ["docker", "push", "bbilly1/tubearchivist-es"],
                 ["docker", "push", "bbilly1/tubearchivist-es:$VERSION"],
             ],
