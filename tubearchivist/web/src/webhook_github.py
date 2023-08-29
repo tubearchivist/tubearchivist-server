@@ -122,7 +122,8 @@ class GithubHook(WebhookBase):
         tag_name = self.hook["release"]["tag_name"]
         task = TaskHandler(self.repo_conf, tag_name=tag_name)
         task.create_task("build_release")
-        GithubBackup(tag_name).save_tag()
+        if self.repo == "tubearchivist":
+            GithubBackup(tag_name).save_tag()
 
     def save_hook(self):
         """save hook to disk for easy debugging"""
