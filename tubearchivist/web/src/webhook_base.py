@@ -58,6 +58,10 @@ class WebhookBase:
             ],
             "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
         },
+        "tubearchivist-plex": {
+            "gh_user": "tubearchivist",
+            "gh_repo": "tubearchivist-plex",
+        },
         "discord-bot": {
             "gh_user": "tubearchivist",
             "gh_repo": "discord-bot",

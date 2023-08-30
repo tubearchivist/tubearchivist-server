@@ -20,6 +20,7 @@ HOOK_URL = {
     "tubearchivist/tubearchivist": environ.get("GITHUB_TA_HOOK_URL"),
     "tubearchivist/docs": environ.get("GITHUB_DOCS_URL"),
     "tubearchivist/tubearchivist-jf": environ.get("GITHUB_JF_URL"),
+    "tubearchivist/tubearchivist-plex": environ.get("GITHUB_PLEX_URL"),
 }
 
 
