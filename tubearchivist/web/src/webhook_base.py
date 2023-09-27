@@ -58,6 +58,18 @@ class WebhookBase:
             ],
             "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
         },
+        "members": {
+            "gh_user": "tubearchivist",
+            "gh_repo": "members",
+            "docker_user": "bbilly1",
+            "docker_repo": "tubearchivist-client",
+            "build_release": [
+                "build", "--platform", "linux/amd64,linux/arm64",
+                "-t", "bbilly1/tubearchivist-client",
+                "-t", "bbilly1/tubearchivist-client:$VERSION", "--push"
+            ],
+            "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
+        },
         "tubearchivist-plex": {
             "gh_user": "tubearchivist",
             "gh_repo": "tubearchivist-plex",
