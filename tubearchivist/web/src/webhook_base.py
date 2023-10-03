@@ -15,7 +15,7 @@ class WebhookBase:
             "docker_repo": "tubearchivist",
             "unstable_keyword": "#build",
             "build_unstable": [
-                "build", "--platform", "linux/amd64",
+                "build", "--platform", "linux/amd64,linux/arm64",
                 "-t", "bbilly1/tubearchivist:unstable", "--push"
             ],
             "build_release": [
