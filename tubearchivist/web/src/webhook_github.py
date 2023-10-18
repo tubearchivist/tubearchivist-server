@@ -81,7 +81,8 @@ class GithubHook(WebhookBase):
             TaskHandler(self.repo_conf).create_task("rebuild")
             return
 
-        self._check_readme()
+        if self.repo != "tubearchivist":
+            return
 
         build_message = self.check_commit_message()
         if not build_message:
