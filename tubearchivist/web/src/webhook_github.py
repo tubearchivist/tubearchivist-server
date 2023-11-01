@@ -84,6 +84,7 @@ class GithubHook(WebhookBase):
         if self.repo != "tubearchivist":
             return
 
+        self._check_readme()
         build_message = self.check_commit_message()
         if not build_message:
             print("build keyword not found in commit message")
