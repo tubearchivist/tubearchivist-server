@@ -58,6 +58,10 @@ class WebhookBase:
             ],
             "discord_release_hook": environ.get("GITHUB_RELEASE_HOOK_URL"),
         },
+        "tubearchivist-jf-plugin": {
+            "gh_user": "tubearchivist",
+            "gh_repo": "tubearchivist-jf-plugin",
+        },
         "members": {
             "gh_user": "tubearchivist",
             "gh_repo": "members",
