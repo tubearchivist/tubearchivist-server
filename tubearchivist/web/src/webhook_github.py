@@ -96,10 +96,7 @@ class GithubHook(WebhookBase):
 
     def check_branch(self):
         """check if commit on master branch"""
-        master_branch = self.hook["repository"]["master_branch"]
-        ref = self.hook["ref"]
-
-        return ref.endswith(master_branch)
+        return self.hook.get("ref") == "refs/heads/master"
 
     def check_commit_message(self):
         """check if keyword in commit message is there"""
