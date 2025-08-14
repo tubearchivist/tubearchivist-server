@@ -1,2 +1,2 @@
-redis
-ipython
+ipython==9.4.0
+redis==6.4.0

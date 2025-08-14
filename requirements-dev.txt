@@ -1,0 +1,2 @@
+-r tubearchivist/web/requirements.txt
+requirementscheck==0.1.0
